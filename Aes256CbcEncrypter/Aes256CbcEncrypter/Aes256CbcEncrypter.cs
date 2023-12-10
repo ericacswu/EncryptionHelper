@@ -5,7 +5,7 @@ namespace Aes256CbcEncrypter
         public Aes256CbcEncrypter()
         {
             InitializeComponent();
-            this.Text = "Aes256CbcEncrypter - " + Application.ProductVersion;
+            this.Text = "Aes256CbcEncrypter - " + System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
         }
 
         public string GetKey()
@@ -16,26 +16,45 @@ namespace Aes256CbcEncrypter
 
         private void btnEncrypt_Click(object sender, EventArgs e)
         {
-            DoEncryption(EncryptType.Encrypt);
+            if (ckxEncryptFile.Checked)
+            {
+                DoEncryption(EncryptType.EncryptFile);
+            }
+            else
+            {
+                DoEncryption(EncryptType.Encrypt);
+            }
         }
 
         private void btnDecrypt_Click(object sender, EventArgs e)
         {
-            DoEncryption(EncryptType.Decrypt);
+            if (ckxEncryptFile.Checked)
+            {
+                DoEncryption(EncryptType.DecryptFile);
+            }
+            else
+            {
+                DoEncryption(EncryptType.Decrypt);
+            }
         }
 
         private void DoEncryption(EncryptType type)
         {
             try
             {
-                if(string.IsNullOrWhiteSpace(tbxKey.Text))
+                if (string.IsNullOrWhiteSpace(tbxKey.Text))
                 {
                     MessageBox.Show("Failed", "Key value cannot be null", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-                else if(string.IsNullOrWhiteSpace(rtbxInput.Text))
+                if (!ckxEncryptFile.Checked && string.IsNullOrWhiteSpace(rtbxInput.Text))
                 {
                     MessageBox.Show("Failed", "Input value cannot be null", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+                if(ckxEncryptFile.Checked && string.IsNullOrEmpty(tbxFilePath.Text))
+                {
+                    MessageBox.Show("Failed", "File path cannot be null", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
@@ -46,16 +65,24 @@ namespace Aes256CbcEncrypter
                         txtStatus.Text = "Encrypting...";
                         result = EncryptionHelper.Encrypt(GetKey(), rtbxInput.Text);
                         break;
+                    case EncryptType.EncryptFile:
+                        txtStatus.Text = "Encrypting...";
+                        result = EncryptionHelper.EncryptXmlFile(GetKey(), tbxFilePath.Text);
+                        break;
                     case EncryptType.Decrypt:
                         txtStatus.Text = "Decrypting...";
                         result = EncryptionHelper.Decrypt(GetKey(), rtbxInput.Text);
                         break;
+                    case EncryptType.DecryptFile:
+                        txtStatus.Text = "Decrypting...";
+                        result = EncryptionHelper.DecryptXmlFile(GetKey(), tbxFilePath.Text);
+                        break;
                     default:
-                        result = string.Empty; 
+                        result = string.Empty;
                         break;
                 }
 
-                if(!string.IsNullOrEmpty(result) && !result.Contains("ERROR"))
+                if (!string.IsNullOrEmpty(result) && !result.Contains("ERROR"))
                 {
                     rtbxOutput.Text = result;
                 }
@@ -78,10 +105,27 @@ namespace Aes256CbcEncrypter
             rtbxOutput.Text = string.Empty;
         }
 
+        private void btnBrowse_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Select a File";
+                openFileDialog.Filter = "All Files (*.*)|*.*";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedFilePath = openFileDialog.FileName;
+                    tbxFilePath.Text = selectedFilePath;
+                }
+            }
+        }
+
         private enum EncryptType
         {
             Encrypt,
             Decrypt,
+            EncryptFile,
+            DecryptFile,
         }
     }
 }

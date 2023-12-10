@@ -31,6 +31,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Aes256CbcEncrypter));
             tbxKey = new TextBox();
             gbxAll = new GroupBox();
+            gbxEncryptionSetting = new GroupBox();
+            btnBrowse = new Button();
+            label1 = new Label();
+            tbxFilePath = new TextBox();
+            ckxEncryptFile = new CheckBox();
             btnClear = new Button();
             btnDecrypt = new Button();
             btnEncrypt = new Button();
@@ -42,6 +47,7 @@
             statusBar = new StatusStrip();
             txtStatus = new ToolStripStatusLabel();
             gbxAll.SuspendLayout();
+            gbxEncryptionSetting.SuspendLayout();
             statusBar.SuspendLayout();
             SuspendLayout();
             // 
@@ -54,6 +60,8 @@
             // 
             // gbxAll
             // 
+            gbxAll.Controls.Add(gbxEncryptionSetting);
+            gbxAll.Controls.Add(ckxEncryptFile);
             gbxAll.Controls.Add(btnClear);
             gbxAll.Controls.Add(btnDecrypt);
             gbxAll.Controls.Add(btnEncrypt);
@@ -63,14 +71,68 @@
             gbxAll.Controls.Add(rtbxOutput);
             gbxAll.Controls.Add(rtbxInput);
             gbxAll.Controls.Add(tbxKey);
-            gbxAll.Dock = DockStyle.Fill;
             gbxAll.ForeColor = SystemColors.Control;
-            gbxAll.Location = new Point(0, 0);
+            gbxAll.Location = new Point(12, 12);
             gbxAll.Name = "gbxAll";
-            gbxAll.Size = new Size(464, 371);
+            gbxAll.Size = new Size(564, 418);
             gbxAll.TabIndex = 1;
             gbxAll.TabStop = false;
             gbxAll.Text = "Encryption";
+            // 
+            // gbxEncryptionSetting
+            // 
+            gbxEncryptionSetting.Controls.Add(btnBrowse);
+            gbxEncryptionSetting.Controls.Add(label1);
+            gbxEncryptionSetting.Controls.Add(tbxFilePath);
+            gbxEncryptionSetting.ForeColor = SystemColors.Control;
+            gbxEncryptionSetting.Location = new Point(29, 313);
+            gbxEncryptionSetting.Name = "gbxEncryptionSetting";
+            gbxEncryptionSetting.Size = new Size(511, 87);
+            gbxEncryptionSetting.TabIndex = 2;
+            gbxEncryptionSetting.TabStop = false;
+            gbxEncryptionSetting.Text = "Encryption Setting";
+            // 
+            // btnBrowse
+            // 
+            btnBrowse.BackColor = Color.FromArgb(45, 45, 45);
+            btnBrowse.FlatAppearance.BorderSize = 0;
+            btnBrowse.FlatAppearance.MouseDownBackColor = Color.FromArgb(20, 20, 20);
+            btnBrowse.FlatAppearance.MouseOverBackColor = Color.FromArgb(20, 20, 20);
+            btnBrowse.FlatStyle = FlatStyle.Flat;
+            btnBrowse.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnBrowse.Location = new Point(395, 27);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(99, 38);
+            btnBrowse.TabIndex = 5;
+            btnBrowse.Text = "Browse";
+            btnBrowse.UseVisualStyleBackColor = false;
+            btnBrowse.Click += btnBrowse_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(20, 40);
+            label1.Name = "label1";
+            label1.Size = new Size(49, 15);
+            label1.TabIndex = 2;
+            label1.Text = "FilePath";
+            // 
+            // tbxFilePath
+            // 
+            tbxFilePath.Location = new Point(86, 36);
+            tbxFilePath.Name = "tbxFilePath";
+            tbxFilePath.Size = new Size(297, 23);
+            tbxFilePath.TabIndex = 3;
+            // 
+            // ckxEncryptFile
+            // 
+            ckxEncryptFile.AutoSize = true;
+            ckxEncryptFile.Location = new Point(29, 288);
+            ckxEncryptFile.Name = "ckxEncryptFile";
+            ckxEncryptFile.Size = new Size(84, 19);
+            ckxEncryptFile.TabIndex = 6;
+            ckxEncryptFile.Text = "EncryptFile";
+            ckxEncryptFile.UseVisualStyleBackColor = true;
             // 
             // btnClear
             // 
@@ -80,9 +142,9 @@
             btnClear.FlatAppearance.MouseOverBackColor = Color.FromArgb(20, 20, 20);
             btnClear.FlatStyle = FlatStyle.Flat;
             btnClear.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnClear.Location = new Point(324, 286);
+            btnClear.Location = new Point(435, 124);
             btnClear.Name = "btnClear";
-            btnClear.Size = new Size(88, 38);
+            btnClear.Size = new Size(105, 38);
             btnClear.TabIndex = 6;
             btnClear.Text = "Clear";
             btnClear.UseVisualStyleBackColor = false;
@@ -96,7 +158,7 @@
             btnDecrypt.FlatAppearance.MouseOverBackColor = Color.FromArgb(20, 20, 20);
             btnDecrypt.FlatStyle = FlatStyle.Flat;
             btnDecrypt.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnDecrypt.Location = new Point(213, 286);
+            btnDecrypt.Location = new Point(435, 80);
             btnDecrypt.Name = "btnDecrypt";
             btnDecrypt.Size = new Size(105, 38);
             btnDecrypt.TabIndex = 5;
@@ -112,7 +174,7 @@
             btnEncrypt.FlatAppearance.MouseOverBackColor = Color.FromArgb(20, 20, 20);
             btnEncrypt.FlatStyle = FlatStyle.Flat;
             btnEncrypt.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnEncrypt.Location = new Point(102, 286);
+            btnEncrypt.Location = new Point(435, 36);
             btnEncrypt.Name = "btnEncrypt";
             btnEncrypt.Size = new Size(105, 38);
             btnEncrypt.TabIndex = 4;
@@ -166,10 +228,10 @@
             // statusBar
             // 
             statusBar.Items.AddRange(new ToolStripItem[] { txtStatus });
-            statusBar.Location = new Point(0, 349);
+            statusBar.Location = new Point(0, 440);
             statusBar.Name = "statusBar";
             statusBar.RenderMode = ToolStripRenderMode.Professional;
-            statusBar.Size = new Size(464, 22);
+            statusBar.Size = new Size(589, 22);
             statusBar.TabIndex = 0;
             statusBar.Text = "statusStrip1";
             // 
@@ -185,7 +247,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(464, 371);
+            ClientSize = new Size(589, 462);
             Controls.Add(statusBar);
             Controls.Add(gbxAll);
             ForeColor = SystemColors.Window;
@@ -196,6 +258,8 @@
             Text = "Aes256CbcEncrypter";
             gbxAll.ResumeLayout(false);
             gbxAll.PerformLayout();
+            gbxEncryptionSetting.ResumeLayout(false);
+            gbxEncryptionSetting.PerformLayout();
             statusBar.ResumeLayout(false);
             statusBar.PerformLayout();
             ResumeLayout(false);
@@ -217,5 +281,10 @@
         private ToolStripProgressBar progressBar;
         private ToolStripStatusLabel txtStatus;
         private Button btnClear;
+        private CheckBox ckxEncryptFile;
+        private GroupBox gbxEncryptionSetting;
+        private Button btnBrowse;
+        private Label label1;
+        private TextBox tbxFilePath;
     }
 }
